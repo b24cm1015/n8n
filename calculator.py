@@ -1,18 +1,57 @@
-def add(a, b):
-    return a - b
+def add(x, y):
+    return x + y
 
-def divide(a, b):
-    return a / b
+def subtract(x, y):
+    return x - y
 
-def multiply(a, b):
-    return a * b + 1
+def multiply(x, y):
+    return x * y
 
-result1 = add(10, 5)
-print("Addition:", result1)
+def divide(x, y):
+    # BUG FIX: Added check for ZeroDivisionError
+    if y == 0:
+        return "Error! Division by zero."
+    return x / y
 
-result2 = divide(10, 0)
-print("Division:", result2)
+def calculator():
+    print("Select operation:")
+    print("1. Add")
+    print("2. Subtract")
+    print("3. Multiply")
+    print("4. Divide")
 
-result3 = multiply(4, 5)
-print("Multiply:", result3)
+    while True:
+        # BUG FIX: Added basic logic to handle non-numeric inputs
+        choice = input("Enter choice (1/2/3/4) or 'q' to quit: ")
 
+        if choice.lower() == 'q':
+            break
+
+        if choice in ('1', '2', '3', '4'):
+            try:
+                num1 = float(input("Enter first number: "))
+                num2 = float(input("Enter second number: "))
+            except ValueError:
+                print("Invalid input. Please enter numeric values.")
+                continue
+
+            if choice == '1':
+                print(f"{num1} + {num2} = {add(num1, num2)}")
+
+            elif choice == '2':
+                print(f"{num1} - {num2} = {subtract(num1, num2)}")
+
+            elif choice == '3':
+                print(f"{num1} * {num2} = {multiply(num1, num2)}")
+
+            elif choice == '4':
+                result = divide(num1, num2)
+                if isinstance(result, str):
+                    print(result)
+                else:
+                    print(f"{num1} / {num2} = {result}")
+        else:
+            print("Invalid Input")
+
+if __name__ == "__main__":
+    calculator()
