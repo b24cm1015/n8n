@@ -1,57 +1,82 @@
-def add(x, y):
+def add(x: float, y: float) -> float:
+    """Return the sum of x and y."""
     return x + y
 
-def subtract(x, y):
+
+def subtract(x: float, y: float) -> float:
+    """Return the difference x - y."""
     return x - y
 
-def multiply(x, y):
+
+def multiply(x: float, y: float) -> float:
+    """Return the product of x and y."""
     return x * y
 
-def divide(x, y):
-    # BUG FIX: Added check for ZeroDivisionError
+
+def divide(x: float, y: float) -> float:
+    """Return x / y. Raise ValueError on division by zero."""
     if y == 0:
-        return "Error! Division by zero."
+        raise ValueError("Division by zero")
     return x / y
 
-def calculator():
-    print("Select operation:")
-    print("1. Add")
-    print("2. Subtract")
-    print("3. Multiply")
-    print("4. Divide")
+
+def calculator() -> None:
+    """Interactive CLI calculator."""
+    operations = {
+        "1": ("Add", add, "+"),
+        "2": ("Subtract", subtract, "-"),
+        "3": ("Multiply", multiply, "*"),
+        "4": ("Divide", divide, "/"),
+    }
+
+    def print_menu() -> None:
+        print("Select operation:")
+        for key, (label, _, _) in operations.items():
+            print(f"{key}. {label}")
+        print("q. Quit")
 
     while True:
-        # BUG FIX: Added basic logic to handle non-numeric inputs
-        choice = input("Enter choice (1/2/3/4) or 'q' to quit: ")
-
-        if choice.lower() == 'q':
+        try:
+            print_menu()
+            choice = input("Enter choice (1/2/3/4) or 'q' to quit: ").strip().lower()
+        except (KeyboardInterrupt, EOFError):
+            print("\nExiting.")
             break
 
-        if choice in ('1', '2', '3', '4'):
-            try:
-                num1 = float(input("Enter first number: "))
-                num2 = float(input("Enter second number: "))
-            except ValueError:
-                print("Invalid input. Please enter numeric values.")
-                continue
+        if choice == "q":
+            break
 
-            if choice == '1':
-                print(f"{num1} + {num2} = {add(num1, num2)}")
+        if choice not in operations:
+            print("Invalid choice. Please enter 1, 2, 3, 4 or q.")
+            continue
 
-            elif choice == '2':
-                print(f"{num1} - {num2} = {subtract(num1, num2)}")
+        try:
+            num1 = float(input("Enter first number: "))
+            num2 = float(input("Enter second number: "))
+        except ValueError:
+            print("Invalid input. Please enter numeric values.")
+            continue
+        except (KeyboardInterrupt, EOFError):
+            print("\nExiting.")
+            break
 
-            elif choice == '3':
-                print(f"{num1} * {num2} = {multiply(num1, num2)}")
+        _, func, symbol = operations[choice]
+        try:
+            result = func(num1, num2)
+        except ValueError as e:
+            print(f"Error: {e}")
+            continue
+        except Exception as e:
+            print(f"Unexpected error: {e}")
+            continue
 
-            elif choice == '4':
-                result = divide(num1, num2)
-                if isinstance(result, str):
-                    print(result)
-                else:
-                    print(f"{num1} / {num2} = {result}")
-        else:
-            print("Invalid Input")
+        # Print result with a compact formatting
+        try:
+            print(f"{num1} {symbol} {num2} = {result:.10g}")
+        except (TypeError, ValueError):
+            # Fallback if result isn't a number for some reason
+            print(f"{num1} {symbol} {num2} = {result}")
+
 
 if __name__ == "__main__":
     calculator()
