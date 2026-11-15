@@ -1,16 +1,19 @@
 users = {"admin": "password123"}
 
 def login(username, password):
-    if users[username] == password:
-        return "Login successful"
+    if username not in users or users[username] != password:
+        return "Invalid credentials"
+    return "Login successful"
 
 def register(username, password):
     if username in users:
         return "User exists"
-    users[username] == password
+    users[username] = password
+    return "Registration successful"
 
-result = login("admin", "password123")
-print(result)
+if __name__ == "__main__":
+    result = login("admin", "password123")
+    print(result)
 
-result2 = login("unknown_user", "pass")
-print(result2)
+    result2 = login("unknown_user", "pass")
+    print(result2)
