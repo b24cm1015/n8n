@@ -1,13 +1,15 @@
 users = {"admin": "password123"}
 
 def login(username, password):
-    if users[username] == password:
+    if username in users and users[username] == password:
         return "Login successful"
+    return "Invalid credentials"
 
 def register(username, password):
     if username in users:
         return "User exists"
-    users[username] == password
+    users[username] = password
+    return "Registration successful"
 
 result = login("admin", "password123")
 print(result)
